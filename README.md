@@ -81,8 +81,8 @@ Ao centralizar informação de qualidade em uma interface simples e acolhedora, 
 Estudante de Análise e Desenvolvimento de Sistemas — Gran Faculdade
 Foco em desenvolvimento backend com Python.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://linkedin.com/in/seu-perfil)
-[![GitHub](https://img.shields.io/badge/GitHub-black?style=flat&logo=github)](https://github.com/seu-usuario)
+[![LinkedIn](https://www.linkedin.com/in/leandro-torres-438987230/)
+[![GitHub]((https://github.com/Leandrodev2204))
 
 ---
 
