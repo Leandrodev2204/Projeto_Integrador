@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia de Saúde Mental</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9f9f9;
+      --bg-card: #ffffff;
+      --bg-secondary: #f1f1f1;
+      --text: #1a1a1a;
+      --text-muted: #555;
+      --border: #e0e0e0;
+      --green-bg: #EAF3DE; --green-text: #27500A; --green-border: #639922;
+      --yellow-bg: #FAEEDA; --yellow-text: #633806; --yellow-border: #BA7517;
+      --red-bg: #FCEBEB; --red-text: #791F1F; --red-border: #E24B4A;
+      --blue-bg: #E6F1FB; --blue-text: #0C447C;
+      --radius: 12px; --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .app {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav button {
+      flex: 1;
+      min-width: 130px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .nav button:hover { background: var(--bg-secondary); color: var(--text); }
+    .nav button.active { background: var(--bg-secondary); color: var(--text); border-color: #aaa; font-weight: 600; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .eval-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .eval-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 1rem; }
+
+    .scale { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .scale-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .scale-btn:hover { border-color: #aaa; }
+    .scale-btn.sel-1, .scale-btn.sel-2 { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+    .scale-btn.sel-3 { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-border); }
+    .scale-btn.sel-4, .scale-btn.sel-5 { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+
+    .scale-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: #999; }
+
+    .eval-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--text);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: opacity 0.15s;
+    }
+
+    .eval-btn:hover { opacity: 0.85; }
+
+    .result-box {
+      display: none;
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-top: 1rem;
+      border: 1px solid;
+    }
+
+    .result-box.show { display: block; }
+    .result-box.verde { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .result-box.amarelo { background: var(--yellow-bg); border-color: var(--yellow-border); color: var(--yellow-text); }
+    .result-box.vermelho { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+    .result-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 0.5rem; }
+    .result-box p { font-size: 14px; line-height: 1.6; }
+
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .tip-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .tip-icon { font-size: 22px; color: var(--text-muted); margin-bottom: 10px; }
+    .tip-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .tip-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .resource-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .resource-badge {
+      min-width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .badge-free { background: var(--green-bg); color: var(--green-text); }
+    .badge-crisis { background: var(--red-bg); color: var(--red-text); }
+    .badge-online { background: var(--blue-bg); color: var(--blue-text); }
+
+    .resource-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .resource-info p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .resource-info a { font-size: 13px; color: #185FA5; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+    .resource-info a:hover { text-decoration: underline; }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-right: 4px;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .tag-free { background: var(--green-bg); color: var(--green-text); }
+    .tag-24h { background: var(--red-bg); color: var(--red-text); }
+    .tag-online { background: var(--blue-bg); color: var(--blue-text); }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <h1>🫶 Cuide da sua saúde mental</h1>
+    <p>Um guia gratuito com avaliação do seu bem-estar emocional,<br>dicas de autocuidado e recursos de apoio acessíveis.</p>
+  </div>
+
+  <div class="nav">
+    <button class="active" onclick="showTab('avaliacao', this)">📋 Avaliação</button>
+    <button onclick="showTab('dicas', this)">🌿 Autocuidado</button>
+    <button onclick="showTab('recursos', this)">📞 Recursos</button>
+  </div>
+
+  <!-- AVALIAÇÃO -->
+  <div id="avaliacao" class="section active">
+
+    <div class="eval-card">
+      <h3>Como você está se sentindo em relação ao <strong>sono</strong>?</h3>
+      <div class="scale" id="q1"></div>
+      <div class="scale-label"><span>Muito bem</span><span>Muito mal</span></div>
+    </div>
+
+    <div class="eval-card">
+      <h3>Como está seu nível de <strong>ansiedade ou preocupação</strong>?</h3>
+      <div class="scale" id="q2"></div>
+      <div class="scale-label"><span>Sem ansiedade</span><span>Ansiedade intensa</span></div>
+    </div>
+
+    <div class="eval-card">
+      <h3>Você tem conseguido se sentir <strong>animado ou motivado</strong>?</h3>
+      <div class="scale" id="q3"></div>
+      <div class="scale-label"><span>Sim, bastante</span><span>Quase nada</span></div>
+    </div>
+
+    <div class="eval-card">
+      <h3>Como está sua <strong>capacidade de concentração</strong>?</h3>
+      <div class="scale" id="q4"></div>
+      <div class="scale-label"><span>Focado</span><span>Muito difícil</span></div>
+    </div>
+
+    <button class="eval-btn" onclick="avaliar()">Ver resultado →</button>
+
+    <div id="resultado" class="result-box">
+      <h3 id="res-titulo"></h3>
+      <p id="res-texto"></p>
+    </div>
+  </div>
+
+  <!-- AUTOCUIDADO -->
+  <div id="dicas" class="section">
+    <div class="tip-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🌙</div>
+        <h4>Sono de qualidade</h4>
+        <p>Mantenha horários regulares para dormir e acordar. Evite telas 30 min antes de dormir. O sono regula as emoções.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🏃</div>
+        <h4>Movimento e exercício</h4>
+        <p>Uma caminhada de 20 minutos libera endorfinas. A atividade física regular é um dos melhores antidepressivos naturais.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">👥</div>
+        <h4>Conexões sociais</h4>
+        <p>Mantenha contato com amigos e família. Falar sobre como você se sente alivia o peso emocional e fortalece vínculos.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌬️</div>
+        <h4>Respiração consciente</h4>
+        <p>Inspire por 4s, segure por 4s, expire por 4s. Repita 4 vezes. Ativa o sistema nervoso parassimpático.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📵</div>
+        <h4>Pausas digitais</h4>
+        <p>Limite redes sociais a períodos específicos do dia. O excesso de informação aumenta a ansiedade e dificulta o foco.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📓</div>
+        <h4>Diário emocional</h4>
+        <p>Escreva 3 coisas pelas quais é grato todos os dias. Registrar emoções ajuda a processá-las e identificar padrões.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECURSOS -->
+  <div id="recursos" class="section">
+    <div class="resource-card">
+      <div class="resource-badge badge-crisis"><i class="fa-solid fa-phone"></i></div>
+      <div class="resource-info">
+        <h4>CVV — Centro de Valorização da Vida</h4>
+        <p>Apoio emocional e prevenção do suicídio. Atendimento sigiloso e gratuito 24 horas por dia.</p>
+        <span class="tag tag-24h">24h</span><span class="tag tag-free">Gratuito</span>
+        <br><a href="https://www.cvv.org.br" target="_blank">🔗 cvv.org.br</a> &nbsp;|&nbsp; <strong>Ligue 188</strong>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-badge badge-free"><i class="fa-solid fa-hospital"></i></div>
+      <div class="resource-info">
+        <h4>CAPS — Centro de Atenção Psicossocial</h4>
+        <p>Serviço público e gratuito do SUS. Psicólogos e psiquiatras disponíveis sem plano de saúde.</p>
+        <span class="tag tag-free">Gratuito</span><span class="tag tag-free">SUS</span>
+        <br><a href="https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-mental" target="_blank">🔗 gov.br/saude</a>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-badge badge-online"><i class="fa-solid fa-laptop"></i></div>
+      <div class="resource-info">
+        <h4>Vittude — Psicoterapia online</h4>
+        <p>Plataforma com psicólogos credenciados. Possui opções gratuitas e com desconto para estudantes.</p>
+        <span class="tag tag-online">Online</span><span class="tag tag-free">Planos acessíveis</span>
+        <br><a href="https://www.vittude.com" target="_blank">🔗 vittude.com</a>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-badge badge-online"><i class="fa-solid fa-brain"></i></div>
+      <div class="resource-info">
+        <h4>Instituto Vita Alere</h4>
+        <p>Especializado em prevenção do suicídio e crise. Materiais educativos e grupos de apoio gratuitos.</p>
+        <span class="tag tag-free">Gratuito</span><span class="tag tag-online">Online</span>
+        <br><a href="https://vitaalere.com.br" target="_blank">🔗 vitaalere.com.br</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Projeto desenvolvido por Leandro · Análise e Desenvolvimento de Sistemas · Gran Faculdade
+  </footer>
+
+</div>
+
+<script>
+  const answers = { q1: 0, q2: 0, q3: 0, q4: 0 };
+
+  ['q1','q2','q3','q4'].forEach(q => {
+    const el = document.getElementById(q);
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'scale-btn';
+      btn.textContent = i;
+      btn.onclick = () => {
+        el.querySelectorAll('.scale-btn').forEach(b => b.className = 'scale-btn');
+        btn.className = `scale-btn sel-${i}`;
+        answers[q] = i;
+      };
+      el.appendChild(btn);
+    }
+  });
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function avaliar() {
+    const vals = Object.values(answers);
+    if (vals.includes(0)) {
+      alert('Por favor, responda todas as perguntas antes de ver o resultado.');
+      return;
+    }
+    const media = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const box = document.getElementById('resultado');
+    const titulo = document.getElementById('res-titulo');
+    const texto = document.getElementById('res-texto');
+    box.className = 'result-box show';
+
+    if (media <= 2) {
+      box.classList.add('verde');
+      titulo.textContent = '✅ Você está bem!';
+      texto.textContent = 'Suas respostas indicam um bom estado emocional. Continue cuidando de si: mantenha sua rotina de sono, exercícios e conexões sociais. A prevenção é a melhor forma de cuidar da saúde mental.';
+    } else if (media <= 3.5) {
+      box.classList.add('amarelo');
+      titulo.textContent = '⚠️ Atenção ao seu bem-estar';
+      texto.textContent = 'Você pode estar passando por um período de estresse ou cansaço emocional. Confira as dicas de autocuidado e, se possível, converse com alguém de confiança. Pequenas mudanças na rotina fazem grande diferença.';
+    } else {
+      box.classList.add('vermelho');
+      titulo.textContent = '🆘 Busque apoio agora';
+      texto.textContent = 'Suas respostas indicam que você pode estar sofrendo emocionalmente. Isso é mais comum do que parece e tem solução. Não enfrente isso sozinho(a): consulte os recursos na aba "Recursos" ou ligue para o CVV: 188. Cuidar da saúde mental é um ato de coragem.';
+    }
+  }
+</script>
+</body>
+</html>
